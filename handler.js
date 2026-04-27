@@ -283,7 +283,6 @@ global.comando = command
                         
 if ((m.id.startsWith("NJX-") || (m.id.startsWith("BAE5") && m.id.length === 16) || (m.id.startsWith("B24E") && m.id.length === 20))) return
   
-// Primary by: Alex 🐼
 if (global.db.data.chats[m.chat].primaryBot && global.db.data.chats[m.chat].primaryBot !== this.user.jid) {
 const primaryBotConn = global.conns.find(conn => conn.user.jid === global.db.data.chats[m.chat].primaryBot && conn.ws.socket && conn.ws.socket.readyState !== ws.CLOSED)
 const participants = m.isGroup ? (await this.groupMetadata(m.chat).catch(() => ({ participants: [] }))).participants : []
@@ -303,12 +302,12 @@ const botId = this.user.jid
 const primaryBotId = chat.primaryBot
 if (name !== "group-banchat.js" && chat?.isBanned && !isROwner) {
 if (!primaryBotId || primaryBotId === botId) {
-const aviso = `ꕥ El bot *${botname}* está desactivado en este grupo\n\n> ✦ Un *administrador* puede activarlo con el comando:\n> » *${usedPrefix}bot on*`.trim()
+const aviso = `🌟 El bot *${botname}* está desactivado en este grupo\n\n> 🍷 Un *administrador* puede activarlo con el comando:\n> » *${usedPrefix}bot on*`.trim()
 await m.reply(aviso)
 return
 }}
 if (m.text && user.banned && !isROwner) {
-const mensaje = `ꕥ Estas baneado/a, no puedes usar comandos en este bot!\n\n> ● *Razón ›* ${user.bannedReason}\n\n> ● Si este Bot es cuenta oficial y tienes evidencia que respalde que este mensaje es un error, puedes exponer tu caso con un moderador.`.trim()
+const mensaje = `😥 Estas baneado/a, no puedes usar comandos en este bot!\n\n> 📚 *Razón ›* ${user.bannedReason}\n\n> ● Si este Bot es cuenta oficial y tienes evidencia que respalde que este mensaje es un error, puedes exponer tu caso con un moderador.`.trim()
 if (!primaryBotId || primaryBotId === botId) {
 m.reply(mensaje)
 return
@@ -410,29 +409,25 @@ console.log(m.message)
 }}}
 
 global.dfail = (type, m, conn) => {
-let edadaleatoria = ['10', '28', '20', '40', '18', '21', '15', '11', '9', '17', '25'].getRandom()
 let user2 = m.pushName || 'Anónimo'
-let verifyaleatorio = ['registrar', 'reg', 'verificar', 'verify', 'register'].getRandom()
  const msg = {
-   rowner: ` ׄ 🍃 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙘𝙧𝙚𝙖𝙙𝙤𝙧𝙚𝙨 𝙙𝙚𝙡 𝙗𝙤𝙩.`,
+   rowner: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘱𝘰𝘳 𝘭𝘰𝘴 𝘤𝘳𝘦𝘢𝘥𝘰𝘳𝘦𝘴 𝘥𝘦𝘭 𝘣𝘰𝘵.`,
 
-   owner: ` ׄ 🌾 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙙𝙚𝙨𝙖𝙧𝙧𝙤𝙡𝙡𝙖𝙙𝙤𝙧𝙚𝙨 𝙙𝙚𝙡 𝙗𝙤𝙩.`,
+   owner: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘱𝘰𝘳 𝘭𝘰𝘴 𝘥𝘦𝘴𝘢𝘳𝘳𝘰𝘭𝘭𝘢𝘥𝘰𝘳𝘦𝘴 𝘥𝘦𝘭 𝘣𝘰𝘵.`,
 
-   mods: ` ׄ 🍉 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙢𝙤𝙙𝙚𝙧𝙖𝙙𝙤𝙧𝙚𝙨 𝙙𝙚𝙡 𝙗𝙤𝙩.`,
+   mods: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘱𝘰𝘳 𝘭𝘰𝘴 𝘮𝘰𝘥𝘦𝘳𝘢𝘥𝘰𝘳𝘦𝘴 𝘥𝘦𝘭 𝘣𝘰𝘵.`,
 
-   premium: ` ׄ 🍋 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙪𝙨𝙪𝙖𝙧𝙞𝙤𝙨 𝙥𝙧𝙚𝙢𝙞𝙪𝙢.`,
+   premium: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘱𝘰𝘳 𝘭𝘰𝘴 𝘶𝘴𝘶𝘢𝘳𝘪𝘰𝘴 𝘱𝘳𝘦𝘮𝘪𝘶𝘮.`,
 
-   group: ` ׄ 🌿 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙚𝙣 𝙜𝙧𝙪𝙥𝙤𝙨.`,
+   group: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘦𝘯 𝘨𝘳𝘶𝘱𝘰𝘴.`,
 
-   private: ` ׄ 🌀 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙖𝙡 𝙘𝙝𝙖𝙩 𝙥𝙧𝙞𝙫𝙖𝙙𝙤 𝙙𝙚𝙡 𝙗𝙤𝙩.`,
+   private: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘢𝘭 𝘤𝘩𝘢𝘵 𝘱𝘳𝘪𝘷𝘢𝘥𝘰 𝘥𝘦𝘭 𝘣𝘰𝘵.`,
 
-   admin: ` ׄ 🎋 ׅ  𝙀𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙨𝙤𝙡𝙤 𝙥𝙪𝙚𝙙𝙚 𝙨𝙚𝙧 𝙪𝙨𝙖𝙙𝙤 𝙥𝙤𝙧 𝙡𝙤𝙨 𝙖𝙙𝙢𝙞𝙣𝙨 𝙙𝙚𝙡 𝙜𝙧𝙪𝙥𝙤.`,
+   admin: ` ׄ ⚠️ ׅ  𝘌𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘴𝘰𝘭𝘰 𝘱𝘶𝘦𝘥𝘦 𝘴𝘦𝘳 𝘶𝘴𝘢𝘥𝘰 𝘱𝘰𝘳 𝘭𝘰𝘴 𝘢𝘥𝘮𝘪𝘯𝘴 𝘥𝘦𝘭 𝘨𝘳𝘶𝘱𝘰.`,
 
-   botAdmin: ` ׄ 🚀 ׅ  𝙋𝙖𝙧𝙖 𝙚𝙟𝙚𝙘𝙪𝙩𝙖𝙧 𝙚𝙡 𝙘𝙤𝙢𝙖𝙣𝙙𝙤 *${comando}* 𝙙𝙚𝙗𝙤 𝙨𝙚𝙧 𝙖𝙙𝙢𝙞𝙣𝙞𝙨𝙩𝙧𝙖𝙙𝙤𝙧 𝙙𝙚𝙡 𝙜𝙧𝙪𝙥𝙤.`,
-   
-   unreg: ` ׄ 🎋 ׅ  𝙽𝙾 𝚃𝙴 𝙴𝙽𝙲𝚄𝙴𝙽𝚃𝚁𝙰𝚂 𝚁𝙴𝙶𝙸𝚂𝚃𝚁𝙰𝙳𝙾(𝙰)\n𝚁𝙴𝙶𝙸𝚂𝚃𝚁𝙰𝚃𝙴 𝙿𝙰𝚁𝙰 𝚄𝚂𝙰𝚁 𝙴𝚂𝚃𝙰 𝙵𝚄𝙽𝙲𝙸𝙾𝙽.\n\nᴜᴛɪʟɪᴢᴀ: #ʀᴇɢ <ɴᴏᴍʙʀᴇ.ᴇᴅᴀᴅ>\n\n\`𝙴𝙹𝙴𝙼𝙿𝙻𝙾:\`\n> » #${verifyaleatorio} ${user2}.${edadaleatoria}`, 
+   botAdmin: ` ׄ ⚠️ ׅ  𝘗𝘢𝘳𝘢 𝘦𝘫𝘦𝘤𝘶𝘵𝘢𝘳 𝘦𝘭 𝘤𝘰𝘮𝘢𝘯𝘥𝘰 *${comando}* 𝘥𝘦𝘣𝘰 𝘴𝘦𝘳 𝘢𝘥𝘮𝘪𝘯𝘪𝘴𝘵𝘳𝘢𝘥𝘰𝘳 𝘥𝘦𝘭 𝘨𝘳𝘶𝘱𝘰.`,
 
-   restrict: `*_ ׄ ☁️ ׅ  Esta caracteristica está desactivada._*`
+   restrict: `*_ ׄ ⚠️ ׅ  𝘌𝘴𝘵𝘢 𝘤𝘢𝘳𝘢𝘤𝘵𝘦𝘳𝘪𝘴𝘵𝘪𝘤𝘢 𝘦𝘴𝘵𝘢́ 𝘥𝘦𝘴𝘢𝘤𝘵𝘪𝘷𝘢𝘥𝘢._*`
  }[type]
 if (msg) return conn.reply(m.chat, msg, m, rcanalx).then(_ => m.react('✖️'))
 }
