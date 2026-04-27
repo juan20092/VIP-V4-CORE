@@ -20,8 +20,8 @@ global.año = d.toLocaleDateString('es', {year: 'numeric'})
 global.tiempo = d.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true})
 
 var canal = 'https://whatsapp.com/channel/0029VbARAwbEgGfOsCN1T10V'  
-var git = 'https://github.com/Shadow-nex'
-var github = 'https://github.com/Shadow-nex/KanekiBot-V3' 
+var git = 'https://github.com/juan20092/MELIODAS-BOT.git'
+var github = 'https://github.com/juan20092/MELIODAS-BOT' 
 var correo = 'juanboli2009@gmail.com'
 global.redes = [canal,git, github, correo].getRandom()
 
