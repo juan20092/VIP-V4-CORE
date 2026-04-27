@@ -38,8 +38,8 @@ global.etiqueta = "✫.ƚԋҽ ʂԋαԃσɯ ƈσɾҽ  ⊹꙰ "
 global.gt = '© ᥴrᥱᥲ𝗍ᥱძ ᑲᥡ sʜᴀᴅᴏᴡ.xʏᴢ 🍃'
 
 global.currency = "¥enes"
-global.banner = "https://i.pinimg.com/originals/90/c8/58/90c858c65f0b3b2fca9a226fa369aa2b.png"
-global.icono2 = "https://i.pinimg.com/originals/b3/67/d5/b367d513d861de468305c32c6cd22756.jpg"
+global.banner = "https://api.dix.lat/media2/1777327424999.jpg"
+global.icono2 = "https://api.dix.lat/media2/1777327498020.jpg"
 global.catalogo = fs.readFileSync('./lib/catalogo.jpg')
 
 //*─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─⭒─ׄ─ׅ─ׄ─*
@@ -48,7 +48,7 @@ global.group = "https://whatsapp.com/channel/0029VbC34Nt42DchIWA0q11f"
 global.community = "https://whatsapp.com/channel/0029VbC34Nt42DchIWA0q11f"
 global.channel = "https://whatsapp.com/channel/0029VbC34Nt42DchIWA0q11f"
 global.github = "https://github.com/Shadow-nex/KanekiBot-V3"
-global.gmail = "shadowcore.xyz@gmail.com"
+global.gmail = "juanboli2009@gmail.com"
 global.ch = {
 ch1: "120363422142340004@newsletter"
 }
