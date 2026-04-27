@@ -1,5 +1,5 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '1'
-import './configXD.js'
+import './configWZ.js'
 import './plugins/_allfake.js'
 import cfonts from 'cfonts'
 import { createRequire } from 'module'
