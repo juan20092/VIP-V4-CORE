@@ -162,13 +162,46 @@ await delay(time)
 if (m.isBaileys) return
 m.exp += Math.ceil(Math.random() * 10)
 let usedPrefix
-const groupMetadata = m.isGroup ? { ...(conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}), ...(((conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}).participants) && { participants: ((conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}).participants || []).map(p => ({ ...p, id: p.jid, jid: p.jid, lid: p.lid })) }) } : {}
-const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map(participant => ({ id: participant.jid, jid: participant.jid, lid: participant.lid, admin: participant.admin }))
-const userGroup = (m.isGroup ? participants.find((u) => conn.decodeJid(u.jid) === m.sender) : {}) || {}
-const botGroup = (m.isGroup ? participants.find((u) => conn.decodeJid(u.jid) == this.user.jid) : {}) || {}
+const rawGroupMetadata = m.isGroup ? (conn.chats[m.chat]?.metadata || await this.groupMetadata(m.chat).catch(_ => null) || {}) : {}
+const groupMetadata = m.isGroup ? {
+...rawGroupMetadata,
+...(rawGroupMetadata.participants && {
+participants: rawGroupMetadata.participants.map((participant) => ({
+...participant,
+id: participant.id || participant.jid || participant.lid || '',
+jid: participant.jid || participant.id || '',
+lid: participant.lid || ''
+}))
+})
+} : {}
+const participants = ((m.isGroup ? groupMetadata.participants : []) || []).map((participant) => ({
+...participant,
+id: participant.id || participant.jid || participant.lid || '',
+jid: participant.jid || participant.id || '',
+lid: participant.lid || ''
+}))
+const normalizeCandidate = (value = '') => {
+const normalized = value ? conn.decodeJid(value) : ''
+return normalized || value || ''
+}
+const getParticipantKeys = (participant = {}) => {
+const keys = [participant.id, participant.jid, participant.lid]
+.filter(Boolean)
+.flatMap((value) => {
+const normalized = normalizeCandidate(value)
+const bare = normalized.split('@')[0]
+return [value, normalized, bare]
+})
+return [...new Set(keys.filter(Boolean))]
+}
+const senderKeys = [...new Set([m.sender, normalizeCandidate(m.sender), normalizeCandidate(m.sender).split('@')[0]].filter(Boolean))]
+const botKeys = [...new Set([this.user.jid, normalizeCandidate(this.user.jid), normalizeCandidate(this.user.jid).split('@')[0]].filter(Boolean))]
+const hasAnyKey = (participantKeys = [], targetKeys = []) => participantKeys.some((key) => targetKeys.includes(key))
+const userGroup = (m.isGroup ? participants.find((participant) => hasAnyKey(getParticipantKeys(participant), senderKeys)) : {}) || {}
+const botGroup = (m.isGroup ? participants.find((participant) => hasAnyKey(getParticipantKeys(participant), botKeys)) : {}) || {}
 const isRAdmin = userGroup?.admin == "superadmin" || false
 const isAdmin = isRAdmin || userGroup?.admin == "admin" || false
-const isBotAdmin = botGroup?.admin || false
+const isBotAdmin = botGroup?.admin == "superadmin" || botGroup?.admin == "admin" || false
 
 const ___dirname = path.join(path.dirname(fileURLToPath(import.meta.url)), "./plugins")
 for (const name in global.plugins) {
