@@ -20,11 +20,12 @@ import { Boom } from '@hapi/boom'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 import { Low, JSONFile } from 'lowdb'
 import store from './lib/store.js'
-const { proto } = (await import('@whiskeysockets/baileys')).default
+const baileysMod = await import('@whiskeysockets/baileys')
+const baileys = { ...(baileysMod.default || {}), ...baileysMod }
 import pkg from 'google-libphonenumber'
 const { PhoneNumberUtil } = pkg
 const phoneUtil = PhoneNumberUtil.getInstance()
-const { DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser } = await import('@whiskeysockets/baileys')
+const { DisconnectReason, useMultiFileAuthState, MessageRetryMap, fetchLatestBaileysVersion, makeCacheableSignalKeyStore, jidNormalizedUser } = baileys
 import readline, { createInterface } from 'readline'
 import NodeCache from 'node-cache'
 const { CONNECTING } = ws
@@ -32,17 +33,52 @@ const { chain } = lodash
 const PORT = process.env.PORT || process.env.SERVER_PORT || 3000
 
 let { say } = cfonts
-console.log(chalk.magentaBright('\n🚀 Iniciando...'))
-say('KANEKI - BOT AI\n\n-漫·舞', {
+const startupBox = [
+  '╔════════════════════════════════════════════╗',
+  '║            MELIODAS BOT V4 CORE           ║',
+  '║          SEVEN DEADLY SINS SYSTEM         ║',
+  '╚════════════════════════════════════════════╝'
+]
+
+const mascotBox = String.raw`
+                   /\
+              /\  /  \  /\
+             /  \/ /\ \/  \
+            / /\  /  \  /\ \
+           /_/  \/____\/  \_\
+
+               MELIODAS BOT
+             DRAGON WRATH MODE
+`.trim().split('\n')
+
+console.log('')
+startupBox.forEach((line, i) => {
+  const color = i === 1 || i === 2 ? '#ffd166' : '#ff2a2a'
+  console.log(chalk.hex(color)(line))
+})
+
+mascotBox.forEach((line, i) => {
+  const color = i >= mascotBox.length - 2 ? '#ffd166' : '#ff9f43'
+  console.log(chalk.hex(color)(line))
+})
+
+say('MELIODAS', {
 font: 'block',
 align: 'center',
-gradient: ['green', 'white']
+gradient: ['#ff1a1a', '#ffe600']
 })
-say('˙˚ʚ₍ ᐢ. ̫ .ᐢ ₎ɞ˚ ᴍᴀᴅᴇ ᴡɪᴛʜ ʟᴏᴠᴇ ʙʏ sʜᴀᴅᴏᴡ.xʏᴢ', {
+say('BOT', {
+font: 'block',
+align: 'center',
+gradient: ['#ffe600', '#ff1a1a']
+})
+say('CREADO POR JUAN', {
 font: 'console',
 align: 'center',
-colors: ['cyan', 'magenta', 'yellow']
+colors: ['white', 'cyan']
 })
+
+console.log(chalk.hex('#ff2a2a')('══════════════════════════════════════════════'))
 protoType()
 serialize()
 
