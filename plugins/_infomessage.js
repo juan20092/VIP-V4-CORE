@@ -1,134 +1,76 @@
-let WAMessageStubType = (await import('@whiskeysockets/baileys')).default
-import chalk from 'chalk'
-import fs from 'fs'
-import axios from 'axios'
-import path from 'path'
-import fetch from 'node-fetch'
+import { readdirSync, unlinkSync, existsSync, promises as fs, rmSync } from 'fs';
+import path from 'path';
 
-const groupMetadataCache = new Map()
-const lidCache = new Map()
-const handler = m => m
-handler.before = async function (m, { conn, participants, groupMetadata }) {
-if (!m.messageStubType || !m.isGroup) return
-const primaryBot = global.db.data.chats[m.chat].primaryBot
-if (primaryBot && conn.user.jid !== primaryBot) throw !1
-const chat = global.db.data.chats[m.chat]
-const users = m.messageStubParameters[0]
-const usuario = await resolveLidToRealJid(m?.sender, conn, m?.chat)
-const groupAdmins = participants.filter(p => p.admin)
+export async function before(m, { conn, participants}) {
+  if (!m.messageStubType || !m.isGroup) return
 
-  const getThumbnail = async () => {
-    const res = await axios.get("https://files.catbox.moe/3labkc.jpg", { responseType: "arraybuffer" })
-    return Buffer.from(res.data, "binary")
-  }
+  let usuario = `@${m.sender.split`@`[0]}`
 
-  const thumbnail = await getThumbnail()
-  const shadow_xyz = {
+  let pp = await conn.getFile('https://files.catbox.moe/nh2sz1.jpg')
+    .then(r => r.data)
+
+  let fkontak = {
     key: {
+      participants: '0@s.whatsapp.net',
+      remoteJid: 'status@broadcast',
       fromMe: false,
-      participant: "0@s.whatsapp.net",
-      remoteJid: "status@broadcast"
+      id: 'JirenBot'
     },
     message: {
-      productMessage: {
-        product: {
-          productImage: {
-            mimetype: "image/jpeg",
-            jpegThumbnail: thumbnail
-          },
-          title: "𐔌 . ⋮ ᗩ ᐯ I Տ O .ᐟ ֹ ₊ ꒱",
-          description: dev,
-          currencyCode: "USD",
-          priceAmount1000: 5000,
-          retailerId: "ShadowCore",
-          productImageCount: 1
-        },
-        businessOwnerJid: "51919199620@s.whatsapp.net"
+      locationMessage: {
+        name: '𝐕𝐈𝐏 𝐁𝐎𝐓',
+        jpegThumbnail: pp
+      }
+    },
+    participant: '0@s.whatsapp.net'
+  }
+
+  let chat = global.db.data.chats[m.chat]
+  let users = participants.map(u => conn.decodeJid(u.id))
+  const groupAdmins = participants.filter(p => p.admin)
+  const listAdmin = groupAdmins.map((v, i) => `*» ${i + 1}. @${v.id.split('@')[0]}*`).join('\n')
+
+  if (chat.detect && m.messageStubType == 2) {
+    const chatId = m.isGroup ? m.chat : m.sender;
+    const uniqid = chatId.split('@')[0];
+    const sessionCandidates = [
+      `./${global.sessions || 'Session'}/`,
+      './Session/',
+      './session/'
+    ];
+    const sessionPath = sessionCandidates.find(p => existsSync(p));
+    if (!sessionPath) return;
+
+    const files = await fs.readdir(sessionPath);
+    let filesDeleted = 0;
+    for (const file of files) {
+      if (file.includes(uniqid)) {
+        await fs.unlink(path.join(sessionPath, file));
+        filesDeleted++;
       }
     }
+  } else if (chat.detect && m.messageStubType == 21) {
+    await this.sendMessage(m.chat, { text: `${usuario} \`𝐂𝐀𝐌𝐁𝐈𝐎 𝐄𝐋 𝐍𝐎𝐌𝐁𝐑𝐄 𝐃𝐄𝐋 𝐆𝐑𝐔𝐏𝐎 𝐀:\`\n\n> *${m.messageStubParameters[0]}*`, mentions: [m.sender, ...groupAdmins.map(v => v.id)] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 22) {
+    await this.sendMessage(m.chat, { text: `${usuario} \`𝐇𝐀 𝐂𝐀𝐌𝐁𝐈𝐀𝐃𝐎 𝐋𝐀 𝐅𝐎𝐓𝐎 𝐃𝐄𝐋 𝐆𝐑𝐔𝐏𝐎 🏘️\``, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100}) 
+  } else if (chat.detect && m.messageStubType == 24) {
+    await this.sendMessage(m.chat, { text: `${usuario} \`𝐂𝐀𝐌𝐁𝐈𝐎 𝐋𝐀 𝐃𝐄𝐒𝐂𝐑𝐈𝐏𝐂𝐈𝐎𝐍 𝐍𝐔𝐄𝐕𝐀 🛸\`\n\n> ${m.messageStubParameters[0]}`, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 25) {
+    await this.sendMessage(m.chat, { text: `\`🎰 𝐀𝐇𝐎𝐑𝐀 🎰\`\n\n> *${m.messageStubParameters[0] == 'on' ? 'ꇙꄲ꒒ꄲ ᥲძmіᥒs' : '𝗍᥆ძ᥆s'}*⍴ᥙᥱძᥱᥒ ᥱძі𝗍ᥲr ᥣᥲ іᥒ𝖿᥆rmᥲᥴі᥆ᥒ ძᥱᥣ grᥙ⍴᥆`, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 26) {
+    await this.sendMessage(m.chat, { text: `𝐆𝐑𝐔𝐏𝐎 *${m.messageStubParameters[0] == 'on' ? '𝐂𝐄𝐑𝐑𝐀𝐃𝐎 🔒' : '𝐀𝐁𝐈𝐄𝐑𝐓𝐎 🔓'}*\n ${m.messageStubParameters[0] == 'on' ? '𝐒𝐎𝐋𝐎 𝐀𝐃𝐌𝐈𝐍𝐒 𝐏𝐔𝐄𝐃𝐄𝐍 𝐄𝐒𝐂𝐑𝐈𝐁𝐈𝐑' : '𝐘𝐀 𝐓𝐎𝐃𝐎𝐒 𝐏𝐔𝐄𝐃𝐄𝐍 𝐄𝐒𝐂𝐑𝐈𝐁𝐈𝐑'} 𝐄𝐍 𝐄𝐒𝐓𝐄 𝐆𝐑𝐔𝐏𝐎`, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 29) {
+    await this.sendMessage(m.chat, { text: `@${m.messageStubParameters[0].split`@`[0]} \`𝐀𝐇𝐎𝐑𝐀 𝐄𝐒 𝐀𝐃𝐌𝐈𝐍𝐈𝐒𝐓𝐑𝐀𝐃𝐎𝐑\`\n\n\`🫵 𝐀𝐂𝐂𝐈𝐎𝐍 𝐇𝐄𝐂𝐇𝐀 𝐏𝐎𝐑\`\n${usuario}`, mentions: [m.sender, m.messageStubParameters[0], ...groupAdmins.map(v => v.id)] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 30) {
+    await this.sendMessage(m.chat, { text: `@${m.messageStubParameters[0].split`@`[0]} \`𝐀𝐇𝐎𝐑𝐀 𝐍𝐎 𝐄𝐒 𝐀𝐃𝐌𝐈𝐍𝐈𝐒𝐓𝐑𝐀𝐃𝐎𝐑\`\n\n\`🫵 𝐀𝐂𝐂𝐈𝐎𝐍 𝐇𝐄𝐂𝐇𝐀 𝐏𝐎𝐑\`\n${usuario}`, mentions: [m.sender, m.messageStubParameters[0], ...groupAdmins.map(v => v.id)] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 72) {
+    await this.sendMessage(m.chat, { text: `${usuario} 🌟 𝐂𝐀𝐌𝐁𝐈𝐎 𝐋𝐀 𝐃𝐔𝐑𝐀𝐂𝐈𝐎́𝐍 𝐃𝐄 𝐋𝐎𝐒 𝐌𝐄𝐍𝐒𝐀𝐉𝐄𝐒 𝐓𝐄𝐌𝐏𝐎𝐑𝐀𝐋𝐄𝐒 𝐀*@${m.messageStubParameters[0]}*`, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else if (chat.detect && m.messageStubType == 123) {
+    await this.sendMessage(m.chat, { text: `${usuario} 🍭 𝐃𝐄𝐒𝐀𝐂𝐓𝐈𝐕𝐎́ 𝐋𝐎𝐒 𝐌𝐄𝐍𝐒𝐀𝐉𝐄𝐒 𝐓𝐄𝐌𝐏𝐎𝐑𝐀𝐋𝐄𝐒.`, mentions: [m.sender] }, { quoted: fkontak, ephemeralExpiration: 24*60*100, disappearingMessagesInChat: 24*60*100})
+  } else {
+    console.log({
+      messageStubType: m.messageStubType,
+      messageStubParameters: m.messageStubParameters
+    })
   }
-  
-  
-const rcanal = { contextInfo: { isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: channelRD.id, serverMessageId: '（つ  / ♡. ㅤ•*゜・。... 🄺🄰🄽🄴🄺🄸 🄱🄾🅃 🄼🄳🍃⃤꙰ 🌀꒱* ', newsletterName: channelRD.name }, externalAdReply: { title: "", body: textbot, mediaUrl: null, description: null, previewType: "PHOTO", thumbnail: await (await fetch(icono)).buffer(), sourceUrl: redes, mediaType: 1, renderLargerThumbnail: false }, mentionedJid: null }}
-const pp = await conn.profilePictureUrl(m.chat, 'image').catch(_ => null) || 'https://files.catbox.moe/xr2m6u.jpg'
-const nombre = `> ❀ @${usuario.split('@')[0]} Ha cambiado el nombre del grupo.\n> ✦ Ahora el grupo se llama:\n> *${m.messageStubParameters[0]}*.`
-
-const foto = `> ❀ Se ha cambiado la imagen del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-const edit = `> ❀ @${usuario.split('@')[0]} Ha permitido que ${m.messageStubParameters[0] == 'on' ? 'solo admins' : 'todos'} puedan configurar el grupo.`
-
-const newlink = `> ❀ El enlace del grupo ha sido restablecido.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-const status = `> ❀ El grupo ha sido ${m.messageStubParameters[0] == 'on' ? '*cerrado*' : '*abierto*'} Por @${usuario.split('@')[0]}\n> ✦ Ahora ${m.messageStubParameters[0] == 'on' ? '*solo admins*' : '*todos*'} pueden enviar mensaje.`
-
-const admingp = `> ❀ @${users.split('@')[0]} Ahora es admin del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-
-const noadmingp = `> ❀ @${users.split('@')[0]} Deja de ser admin del grupo.\n> ✦ Acción hecha por:\n> » @${usuario.split('@')[0]}`
-
-if (chat.detect && m.messageStubType == 2) {
-const uniqid = (m.isGroup ? m.chat : m.sender).split('@')[0]
-const sessionPath = `./${sessions}/`
-for (const file of await fs.promises.readdir(sessionPath)) {
-if (file.includes(uniqid)) {
-await fs.promises.unlink(path.join(sessionPath, file))
-console.log(`${chalk.yellow.bold('✎ Delete!')} ${chalk.greenBright(`'${file}'`)}\n${chalk.redBright('Que provoca el "undefined" en el chat.')}`)
-}}} if (chat.detect && m.messageStubType == 21) {
-rcanal.contextInfo.mentionedJid = [usuario, ...groupAdmins.map(v => v.id)]
-await this.sendMessage(m.chat, { text: nombre, ...rcanal }, { quoted: shadow_xyz })
-} if (chat.detect && m.messageStubType == 22) {
-rcanal.contextInfo.mentionedJid = [usuario, ...groupAdmins.map(v => v.id)]
-await this.sendMessage(m.chat, { image: { url: pp }, caption: foto, ...rcanal }, { quoted: shadow_xyzl })
-} if (chat.detect && m.messageStubType == 23) {
-rcanal.contextInfo.mentionedJid = [usuario, ...groupAdmins.map(v => v.id)]
-await this.sendMessage(m.chat, { text: newlink, ...rcanal }, { quoted: shadow_xyz })
-} if (chat.detect && m.messageStubType == 25) {
-rcanal.contextInfo.mentionedJid = [usuario, ...groupAdmins.map(v => v.id)]
-await this.sendMessage(m.chat, { text: edit, ...rcanal }, { quoted: shadow_xyz })
-} if (chat.detect && m.messageStubType == 26) {
-rcanal.contextInfo.mentionedJid = [usuario, ...groupAdmins.map(v => v.id)]
-await this.sendMessage(m.chat, { text: status, ...rcanal }, { quoted: shadow_xyz })
-} if (chat.detect && m.messageStubType == 29) {
-rcanal.contextInfo.mentionedJid = [usuario, users, ...groupAdmins.map(v => v.id)].filter(Boolean)
-await this.sendMessage(m.chat, { text: admingp, ...rcanal }, { quoted: shadow_xyz })
-return
-} if (chat.detect && m.messageStubType == 30) {
-rcanal.contextInfo.mentionedJid = [usuario, users, ...groupAdmins.map(v => v.id)].filter(Boolean)
-await this.sendMessage(m.chat, { text: noadmingp, ...rcanal }, { quoted: shadow_xyz })
-} else { 
-if (m.messageStubType == 2) return
-console.log({messageStubType: m.messageStubType,
-messageStubParameters: m.messageStubParameters,
-type: WAMessageStubType[m.messageStubType], 
-})}}
-
-export default handler
-
-async function resolveLidToRealJid(lid, conn, groupChatId, maxRetries = 3, retryDelay = 60000) {
-const inputJid = lid.toString()
-if (!inputJid.endsWith("@lid") || !groupChatId?.endsWith("@g.us")) { return inputJid.includes("@") ? inputJid : `${inputJid}@s.whatsapp.net` }
-if (lidCache.has(inputJid)) { return lidCache.get(inputJid) }
-const lidToFind = inputJid.split("@")[0]
-let attempts = 0
-while (attempts < maxRetries) {
-try {
-const metadata = await conn?.groupMetadata(groupChatId)
-if (!metadata?.participants) { throw new Error("No se obtuvieron participantes") }
-for (const participant of metadata.participants) {
-try {
-if (!participant?.jid) continue
-const contactDetails = await conn?.onWhatsApp(participant.jid)
-if (!contactDetails?.[0]?.lid) continue
-const possibleLid = contactDetails[0].lid.split("@")[0]
-if (possibleLid === lidToFind) {
-lidCache.set(inputJid, participant.jid)
-return participant.jid
-}} catch (e) { continue }}
-lidCache.set(inputJid, inputJid)
-return inputJid
-} catch (e) {
-if (++attempts >= maxRetries) {
-lidCache.set(inputJid, inputJid)
-return inputJid
-}
-await new Promise((resolve) => setTimeout(resolve, retryDelay))
-}}
-return inputJid
 }
