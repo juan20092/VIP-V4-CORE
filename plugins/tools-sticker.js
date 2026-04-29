@@ -15,7 +15,7 @@ let mime = (q.msg || q).mimetype || q.mediaType || ''
 let txt = args.join(' ')
 if (/webp|image|video/g.test(mime) && q.download) {
 if (/video/.test(mime) && (q.msg || q).seconds > 16)
-return conn.reply(m.chat, '✧ El video no puede durar más de *15 segundos*', m)
+return conn.reply(m.chat, `┏━❖ 𝐒𝐓𝐈𝐂𝐊𝐄𝐑 𝐋𝐈𝐌𝐈𝐓𝐄 ❖━┓\n┃\n┃ ⚠️ 𝐕𝐢𝐝𝐞𝐨 𝐦𝐮𝐲 𝐥𝐚𝐫𝐠𝐨\n┃ 𝐒𝐨𝐥𝐨 𝐬𝐞 𝐚𝐜𝐞𝐩𝐭𝐚𝐧\n┃ 𝐡𝐚𝐬𝐭𝐚 𝟏𝟓 𝐬𝐞𝐠𝐮𝐧𝐝𝐨𝐬\n┃\n┗━━━━━━━━━━━━━━━━┛`, m, rcanal)
 let buffer = await q.download()
 await m.react('🕓')
 let marca = txt ? txt.split(/[\u2022|]/).map(part => part.trim()) : [texto1, texto2]
@@ -24,15 +24,17 @@ stiker = await sticker(buffer, false, marca[0], marca[1])
 let buffer = await sticker(false, args[0], texto1, texto2)
 stiker = buffer
 } else {
-return conn.reply(m.chat, '🍃 *Por favor, envía una \`imagen\` o \`video\` para hacer un sticker.*', m, rcanal)
-}} catch (e) {
-await conn.reply(m.chat, '⚠︎ Ocurrió un Error: ' + e.message, m)
+return conn.reply(m.chat, `╔━✦ 𝐒𝐓𝐈𝐂𝐊𝐄𝐑 🚩✦━═╗\n\n ◈ 𝐄𝐧𝐯𝐢𝐚 𝐨 𝐫𝐞𝐬𝐩𝐨𝐧𝐝𝐞\n ◈ 𝐈𝐦𝐚𝐠𝐞𝐧, 𝐯𝐢𝐝𝐞𝐨 𝐨 𝐰𝐞𝐛𝐩\n\n ◈ 𝐋𝐢𝐦𝐢𝐭𝐞 𝐝𝐞 𝐯𝐢𝐝𝐞𝐨\n ◈ 𝐌𝐚𝐱𝐢𝐦𝐨 𝟏𝟓 𝐬𝐞𝐠𝐮𝐧𝐝𝐨𝐬\n\n╚═━━━✦♑︎✦━━━═╝`, m, rcanal)
+}
+} catch (e) {
+await conn.reply(m.chat, `╭━━❮ 𝐄𝐑𝐑𝐎𝐑 𝐃𝐄 𝐒𝐓𝐈𝐂𝐊𝐄𝐑 ❯━━╮\n│\n│ 𝐍𝐨 𝐬𝐞 𝐩𝐮𝐝𝐨 𝐠𝐞𝐧𝐞𝐫𝐚𝐫\n│ 𝐞𝐥 𝐬𝐭𝐢𝐜𝐤𝐞𝐫 𝐚𝐡𝐨𝐫𝐚\n│\n│ 𝐌𝐨𝐭𝐢𝐯𝐨: ${e.message}\n│\n╰━━━━━━━━━━━━━━━━━━━━╯`, m, rcanal)
 await m.react('✖️')
 } finally {
 if (stiker) {
 conn.sendFile(m.chat, stiker, 'sticker.webp', '', m)
 await m.react('✅')
-}}}
+}}
+}
 
 handler.help = ['sticker']
 handler.tags = ['sticker']
