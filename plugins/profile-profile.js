@@ -36,7 +36,7 @@ const haremValue = ownedIDs.reduce((acc, id) => {
 const char = global.db.data.characters[id] || {}
 const value = typeof char.value === 'number' ? char.value : 0
 return acc + value }, 0)
-const pp = await conn.profilePictureUrl(userId, 'image').catch(_ => 'https://raw.githubusercontent.com/The-King-Destroy/Adiciones/main/Contenido/1745522645448.jpeg')
+const pp = await conn.profilePictureUrl(userId, 'image').catch(() => 'https://i.imgur.com/HUyM3Ny.jpeg')
 const text = `*「✦」 Perfil ◢ ${name} ◤*
 ${description}
 
